@@ -29,7 +29,7 @@ jobs:
           API_KEY: ${{ secrets.MY_API_KEY }}
         run: |
           echo "API key is set: ${{ secrets.MY_API_KEY != '' }}"
-          echo "First char test (never do this in real life): ${API_KEY:0:3}..."
+          echo "First char test: ${API_KEY:0:3}..."
 
       - name: Prove secrets are masked
         run: echo "Trying to print secret: ${{ secrets.MY_API_KEY }}"
