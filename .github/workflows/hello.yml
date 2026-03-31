@@ -13,23 +13,24 @@ env:
 jobs:
   show-vars:
     runs-on: ubuntu-latest
-
     env:
       JOB_NAME: my-deployment-job
 
     steps:
       - name: Show environment variables
         run: |
-          echo "App env: $APP_ENV"
-          echo "App version: $APP_VERSION"
-          echo "Job name: $JOB_NAME"
+          echo "App env: ${{ env.APP_ENV }}"
+          echo "App version: ${{ env.APP_VERSION }}"
+          echo "Job name: ${{ env.JOB_NAME }}"
 
       - name: Use a secret
         env:
           API_KEY: ${{ secrets.MY_API_KEY }}
         run: |
-          echo "API key is set!"
-          echo "First char test: ${API_KEY:0:3}..."
-
-      - name: Prove secrets are masked
-        run: echo 'Trying to print secret: ${{ secrets.MY_API_KEY }}'
+          if [ -z "$API_KEY" ]; then
+            echo "ERROR: MY_API_KEY is not set in GitHub Secrets!"
+            exit 1
+          fi
+          echo "API key is recognized by the runner."
+          # Note: GitHub will still mask this output as ***
+          echo "Masked secret length test: ${#API_KEY} characters"
